@@ -3,12 +3,23 @@
 .regressions-page-heading .button-primary { border-color: var(--accent-cyan); background: var(--accent-cyan); color: #071323; box-shadow: 0 0 18px rgb(38 218 239 / 15%); }
 .regressions-page-heading .button-primary:hover { background: #64e9f4; }
 .run-details-stack { gap: 14px; }
-.run-overview-panel, .run-test-panel { border-color: var(--border-default); background: var(--bg-secondary); box-shadow: none; }
+.run-overview-panel, .run-test-panel, .run-details-panel { border-color: var(--border-default); background: var(--bg-secondary); box-shadow: none; }
 .run-overview-panel { padding: 22px; }
+.run-details-panel { min-height: 420px; display: grid; place-items: center; }
+.run-details-panel .empty-state { color: var(--text-secondary); }
+.run-details-panel .empty-state h3 { color: var(--text-primary); }
+.run-details-panel .empty-state p { color: var(--text-secondary); }
+.run-details-panel .empty-icon { border: 1px solid var(--border-default); background: #17233d; color: var(--accent-cyan); }
 .run-detail-heading h2 { color: var(--text-primary); font-family: var(--font-display); }
 .run-detail-heading p { color: #8298b8; }
 .run-title-trigger { color: var(--text-primary); }
 .run-title-trigger:hover, .run-title-trigger.open { color: var(--accent-cyan); }
+.run-dropdown-menu { border-color: var(--border-default); background: #111b31; box-shadow: 0 14px 34px rgb(0 0 0 / 42%); }
+.run-dropdown-option { background: transparent; }
+.run-dropdown-option b { color: var(--text-primary); }
+.run-dropdown-option small { color: var(--text-secondary); }
+.run-dropdown-option:hover, .run-dropdown-option.active { background: rgb(38 218 239 / 8%); }
+.run-dropdown-option.active b { color: var(--accent-cyan); }
 .run-header-actions .button-secondary, .run-tools .button-secondary { border-color: var(--border-default); background: #17233d; color: #c4d3e7; }
 .run-header-actions .button-secondary:hover, .run-tools .button-secondary:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
 .run-completion-heading { color: #a9bdd8; }

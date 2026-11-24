@@ -30,12 +30,12 @@
   --shadow-panel: 0 8px 24px rgb(0 0 0 / 18%);
   --shadow-accent: 0 0 18px rgb(38 218 239 / 16%);
 
-  /* Transitional aliases keep untouched screens visually stable while they are redesigned. */
-  --legacy-page: #f5f7fb;
-  --legacy-panel: #ffffff;
-  --legacy-ink: #17233b;
-  --legacy-muted: #8290a5;
-  --legacy-line: #e9edf4;
-  --legacy-purple: #6558df;
-  --legacy-purple-soft: #f0efff;
+  /* Legacy component rules inherit the current dark theme until their selectors are replaced. */
+  --legacy-page: var(--bg-primary);
+  --legacy-panel: var(--bg-secondary);
+  --legacy-ink: var(--text-primary);
+  --legacy-muted: var(--text-secondary);
+  --legacy-line: var(--border-default);
+  --legacy-purple: var(--accent-purple);
+  --legacy-purple-soft: rgb(166 107 255 / 10%);
 }
