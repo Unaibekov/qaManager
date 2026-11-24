@@ -59,6 +59,7 @@
 
 .run-table-row:hover { background: #17233d; }
 .run-table-row:hover > div { background: transparent; }
+.run-table-row:has(.status-picker.open) > div { background: transparent; }
 .run-table-row:hover .run-table-step-number { border-color: #fff; background: #fff; color: #17233d; }
 .run-table-row:has(+ .run-divider-row) { border-bottom: 0; }
 .run-table-step, .run-table-status, .run-table-comment, .run-table-unavailable { min-width: 0; padding: 12px 13px; border: 0; background: transparent; }

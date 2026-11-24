@@ -190,7 +190,7 @@ export default function CaseCatalog({ cases, setCases, search, setSearch, assets
       <button className="button button-secondary collapse-all-button" disabled={!filtered.length} onClick={toggleAllCases}>{allVisibleCollapsed ? 'Развернуть все' : 'Свернуть все'}</button>
       <button className="button button-primary" onClick={() => open(null)}>＋ Добавить тест</button>
     </div></div>
-    {catalogCases.length === 0 ? <div className="panel"><EmptyState title="В этом каталоге пока нет тестов" text="Добавьте первую проверку в каталог." /></div> : <div className="case-list">
+    {catalogCases.length === 0 ? <div className="panel catalog-empty-panel"><EmptyState title="В этом каталоге пока нет тестов" text="Добавьте первую проверку в каталог." /></div> : <div className="case-list">
       {filtered.map(testCase => <article className="case-row grouped-case-row" key={testCase.id}>
         <div className="case-main">
           <h3 className="case-title-heading"><button className="case-collapse-toggle" type="button" aria-expanded={!collapsedCaseIds.has(testCase.id)} onClick={() => toggleCase(testCase.id)}><span className="case-collapse-title"><HighlightMatches text={testCase.title} query={query} /></span></button>{testCase.note?.trim() && <button type="button" className="case-comment-indicator" aria-label={`Показать комментарий к тесту «${testCase.title}»`} title="Показать комментарий" onClick={() => setViewingComment(testCase)}>!</button>}</h3>

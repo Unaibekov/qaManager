@@ -36,6 +36,7 @@
 .catalog-edit-button:hover { border-color: var(--border-default); background: #1b2a45; color: var(--accent-cyan); }
 
 .catalog-list-heading { align-items: center; gap: 16px; margin: 26px 0 14px; }
+.catalog-list-heading { background: rgb(11 16 32 / 96%); color: var(--text-primary); }
 .catalog-list-title { min-width: 0; }
 .catalog-list-title h2 { overflow: hidden; color: var(--text-primary); font-family: var(--font-display); text-overflow: ellipsis; white-space: nowrap; }
 .count-pill { border: 1px solid rgb(166 107 255 / 28%); background: rgb(166 107 255 / 10%); color: #c09aff; }
@@ -48,6 +49,10 @@
 .collapse-all-button:hover, .catalog-toolbar .button-secondary:hover { border-color: #466387; background: #1a2a45; color: var(--accent-cyan); }
 .catalog-toolbar .button-primary { border-color: var(--accent-cyan); background: var(--accent-cyan); color: #071323; box-shadow: 0 0 16px rgb(38 218 239 / 14%); }
 .catalog-toolbar .button-primary:hover { background: #64e9f4; }
+
+.catalog-empty-panel { border-color: var(--border-default); background: var(--bg-secondary); box-shadow: none; }
+.catalog-empty-panel .empty-state h3 { color: var(--text-primary); }
+.catalog-empty-panel .empty-state p { color: var(--text-secondary); }
 
 .case-list { display: grid; gap: 12px; margin-top: 0; border: 0; }
 .case-row.grouped-case-row {
