@@ -1,0 +1,41 @@
+﻿:root {
+  /* BUG HUNTERS palette */
+  --bg-primary: #0b1020;
+  --bg-secondary: #111b31;
+  --bg-elevated: #17233d;
+  --accent-cyan: #26daef;
+  --accent-purple: #a66bff;
+  --accent-pink: #f15bcb;
+  --text-primary: #ecf4ff;
+  --text-secondary: #94a8c8;
+  --border-default: #273858;
+  --status-success: #34d5a5;
+  --status-failed: #ff648c;
+  --status-progress: #f6c76d;
+  --status-neutral: #94a8c8;
+
+  /* Shared UI tokens */
+  --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --focus-ring: 0 0 0 3px rgb(38 218 239 / 18%);
+  --shadow-panel: 0 8px 24px rgb(0 0 0 / 18%);
+  --shadow-accent: 0 0 18px rgb(38 218 239 / 16%);
+
+  /* Transitional aliases keep untouched screens visually stable while they are redesigned. */
+  --legacy-page: #f5f7fb;
+  --legacy-panel: #ffffff;
+  --legacy-ink: #17233b;
+  --legacy-muted: #8290a5;
+  --legacy-line: #e9edf4;
+  --legacy-purple: #6558df;
+  --legacy-purple-soft: #f0efff;
+}

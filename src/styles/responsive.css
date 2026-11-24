@@ -1,0 +1,44 @@
+/* Shared layout adjustments; component-specific breakpoints live beside their styles. */
+@media (max-width: 1280px) {
+  .content { padding-inline: 28px; }
+  .regression-layout { min-width: 0; }
+  .run-overview-panel { min-width: 0; }
+}
+
+@media (max-width: 900px) {
+  .content { padding: 25px 20px; }
+  .page-heading { gap: 14px; }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .quick-actions { grid-template-columns: 1fr; }
+  .transfer-layout { grid-template-columns: minmax(0, 1fr); }
+  .transfer-layout-backups > .transfer-side-stack { max-width: none; }
+  .run-summary { grid-template-columns: repeat(5, minmax(120px, 1fr)); }
+}
+
+@media (max-width: 680px) {
+  .app-shell { display: block; }
+  .main-area { width: 100%; min-width: 0; }
+  .content { padding: 19px 14px 24px; }
+  .page-heading { align-items: flex-start; margin-bottom: 18px; }
+  .page-heading h1 { font-size: 25px; }
+  .page-heading p { font-size: 12px; }
+  .stats-grid { gap: 8px; }
+  .dashboard-grid { gap: 10px; }
+  .run-summary { grid-template-columns: repeat(5, minmax(108px, 1fr)); }
+  .run-table-wrap { max-width: calc(100vw - 28px); }
+  .run-table-header, .run-table-row { min-width: 860px; }
+  .run-header-actions .button { min-height: 34px; padding-inline: 9px; font-size: 11px; }
+  .footer { margin-top: 18px; }
+}
+
+@media (max-width: 420px) {
+  .content { padding-inline: 10px; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat-card { min-height: 98px; }
+  .run-overview-panel { padding: 12px; }
+  .run-detail-heading { gap: 10px; }
+  .run-detail-heading h2 { font-size: 18px; }
+  .run-summary { grid-template-columns: repeat(5, minmax(100px, 1fr)); }
+  .run-table-wrap { max-width: calc(100vw - 20px); }
+}

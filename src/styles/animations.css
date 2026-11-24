@@ -1,0 +1,31 @@
+html { scroll-behavior: smooth; }
+
+@keyframes panel-arrive {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes progress-arrive {
+  from { transform: scaleX(.02); transform-origin: left; }
+  to { transform: scaleX(1); transform-origin: left; }
+}
+
+.dashboard-hero { animation: panel-arrive 220ms ease-out both; }
+.dashboard-hero .hero-scanline { opacity: .62; }
+.run-completion-track > span, .focus-progress > span, .stat-progress-track > span { animation: progress-arrive 420ms ease-out both; }
+.dashboard-run, .case-row.grouped-case-row, .run-group, .dashboard-panel { transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease; }
+.case-row.grouped-case-row:hover, .dashboard-panel:hover { box-shadow: 0 8px 24px rgb(0 0 0 / 14%); }
+
+.button:focus-visible, .icon-button:focus-visible, .nav-item:focus-visible, .catalog-tab:focus-visible,
+.run-title-trigger:focus-visible, .run-group-title-toggle:focus-visible, .status-picker-trigger:focus-visible,
+.dashboard-run:focus-visible, .catalog-edit-button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .dashboard-hero, .run-completion-track > span, .focus-progress > span, .stat-progress-track > span { animation: none; }
+  .dashboard-run, .case-row.grouped-case-row, .run-group, .dashboard-panel,
+  .button, .nav-item, .catalog-tab, .status-picker-trigger { transition: none; }
+}

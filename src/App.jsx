@@ -4,11 +4,11 @@ import { makeId, repository } from './services/database.js';
 import { executionGroups } from './services/caseModel.js';
 
 const navigation = [
-  { id: 'dashboard', label: 'Обзор', icon: '▦' },
-  { id: 'cases', label: 'Каталог тестов', icon: '☷' },
-  { id: 'regressions', label: 'Регрессы', icon: '◷' },
-  { id: 'history', label: 'История', icon: '◴' },
-  { id: 'transfer', label: 'Импорт / экспорт', icon: '⇅' },
+  { id: 'dashboard', label: 'Обзор', icon: 'dashboard' },
+  { id: 'cases', label: 'Каталог тестов', icon: 'catalog' },
+  { id: 'regressions', label: 'Регрессы', icon: 'regression' },
+  { id: 'history', label: 'История', icon: 'history' },
+  { id: 'transfer', label: 'Импорт / экспорт', icon: 'transfer' },
 ];
 
 const titles = {
@@ -29,6 +29,7 @@ export default function App() {
   const [regressions, setRegressions] = useState([]);
   const [assets, setAssets] = useState([]);
   const [catalogs, setCatalogs] = useState([]);
+  const [dashboardResults, setDashboardResults] = useState([]);
   const [dataReady, setDataReady] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -40,6 +41,20 @@ export default function App() {
     window.addEventListener('scroll', updateScrollState, { passive: true });
     return () => window.removeEventListener('scroll', updateScrollState);
   }, []);
+
+  const dashboardRun = regressions.find(run => run.status === 'active') || regressions[0] || null;
+  useEffect(() => {
+    let cancelled = false;
+    if (page !== 'dashboard' || !dashboardRun) { setDashboardResults([]); return undefined; }
+    repository.getResults(dashboardRun.id).then(items => { if (!cancelled) setDashboardResults(items); }).catch(() => { if (!cancelled) setDashboardResults([]); });
+    return () => { cancelled = true; };
+  }, [page, dashboardRun?.id]);
+
+  const dashboardSteps = dashboardRun ? executionGroups(dashboardRun.cases || []).flatMap(group => group.steps).filter(step => step.kind !== 'heading' && step.kind !== 'separator') : [];
+  const dashboardSlots = dashboardSteps.length * (dashboardRun?.platforms?.length || 0);
+  const dashboardCompleted = dashboardResults.filter(result => result.status && result.status !== 'Не проверено').length;
+  const dashboardProgress = dashboardSlots ? Math.round(dashboardCompleted / dashboardSlots * 100) : 0;
+  const dashboardCounts = dashboardResults.reduce((counts, result) => { const status = result.status || 'Не проверено'; counts[status] = (counts[status] || 0) + 1; return counts; }, {});
 
   useEffect(() => {
     let cancelled = false;
@@ -58,23 +73,23 @@ export default function App() {
   return (
     <div className={`app-shell ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       <aside className="sidebar">
-        <div className="brand"><span className="brand-mark">Q</span><span className="brand-label">QA <b>Manager</b></span></div>
+        <div className="brand"><span className="brand-mark">Q</span><span className="brand-copy"><span className="brand-label">BUG <b>HUNTERS</b></span><small>QA REGRESSION MANAGER</small></span></div>
         <nav aria-label="Основная навигация">
-          {navigation.map((item) => <button key={item.id} aria-label={item.label} title={sidebarCollapsed ? item.label : undefined} className={`nav-item ${!showSettings && page === item.id ? 'active' : ''}`} onClick={() => { setShowSettings(false); setPage(item.id); }}><span className="nav-icon">{item.icon}</span>{item.label}</button>)}
+          {navigation.map((item) => <button key={item.id} aria-label={item.label} title={sidebarCollapsed ? item.label : undefined} className={`nav-item ${!showSettings && page === item.id ? 'active' : ''}`} onClick={() => { setShowSettings(false); setPage(item.id); }}><NavIcon name={item.icon} />{item.label}</button>)}
         </nav>
         <div className="sidebar-bottom">
           <div className="local-status"><span className="status-dot" /><span><b>Локальное хранилище</b><small>Данные на этом устройстве</small></span></div>
-          <button aria-label="Настройки" title={sidebarCollapsed ? 'Настройки' : undefined} className={`nav-item ${showSettings ? 'active' : ''}`} onClick={() => setShowSettings(true)}><span className="nav-icon">⚙</span>Настройки</button>
+          <button aria-label="Настройки" title={sidebarCollapsed ? 'Настройки' : undefined} className={`nav-item ${showSettings ? 'active' : ''}`} onClick={() => setShowSettings(true)}><NavIcon name="settings" />Настройки</button>
           <div className="version"><span>v1.0</span></div>
           <button type="button" className="nav-item sidebar-collapse-button" aria-label={sidebarCollapsed ? 'Развернуть меню' : 'Свернуть меню'} title={sidebarCollapsed ? 'Развернуть меню' : 'Свернуть меню'} onClick={() => setSidebarCollapsed(value => !value)}><span className="nav-icon">{sidebarCollapsed ? '»' : '«'}</span>{sidebarCollapsed ? 'Развернуть меню' : 'Свернуть меню'}</button>
         </div>
       </aside>
       <main className="main-area">
         <section className="content">
-          {!['cases', 'regressions', 'history'].includes(page) && <div className="page-heading"><div><h1>{title}</h1>{subtitle && <p>{subtitle}</p>}</div></div>}
+          {!['cases', 'regressions', 'history', 'dashboard'].includes(page) && <div className="page-heading"><div><h1>{title}</h1>{subtitle && <p>{subtitle}</p>}</div></div>}
           {notice && <div className="notice" role="status"><span>{notice}</span><button onClick={() => setNotice('')}>×</button></div>}
           {showSettings ? <div className="panel settings-panel"><div className="panel-heading"><div><h2>Локальное приложение</h2><p>Данные хранятся в браузере на этом устройстве.</p></div><span className="badge badge-green">Локально</span></div><div className="setting-row"><span><b>Хранилище данных</b><small>IndexedDB · текущий браузер</small></span><span className="setting-value">{dataReady ? 'Подключено' : 'Подключение…'}</span></div><div className="setting-row"><span><b>Резервная копия</b><small>Экспорт и восстановление базы</small></span><button className="button button-secondary" onClick={() => setPage('transfer')}>Открыть импорт / экспорт</button></div></div> : <>
-          {page === 'dashboard' ? <><div className="stats-grid"><Stat label="Тестов в каталоге" value={dataReady ? cases.length.toLocaleString('ru-RU') : '…'} note={cases.length ? 'Сохранено в локальной базе' : 'Добавьте тесты в каталог'} icon="☷" /><Stat label="Активный регресс" value={regressions.filter(r => r.status === 'active').length} note="Текущие прогоны" icon="◷" /><Stat label="Последний прогон" value={regressions[0]?.name || '—'} note={regressions[0] ? new Date(regressions[0].createdAt).toLocaleDateString('ru-RU') : 'История пока пуста'} icon="◴" /><Stat label="Платформы" value="5" note="Android · iOS · adaptive iOs · adaptive android · WEB" icon="▧" /></div><div className="dashboard-grid"><div className="panel"><div className="panel-heading"><div><h2>Последние регрессы</h2><p>Недавние запуски тестирования</p></div><button className="text-button" onClick={() => setPage('history')}>Вся история →</button></div>{regressions.length ? <div className="recent-runs">{regressions.slice(0, 3).map(run => <button key={run.id} onClick={() => setPage(run.status === 'active' ? 'regressions' : 'history')}><span><b>{run.name}</b><small>{new Date(run.createdAt).toLocaleDateString('ru-RU')}</small></span><span className="badge badge-green">{run.status === 'active' ? 'В процессе' : 'Завершён'}</span></button>)}</div> : <EmptyState icon="◷" title="Пока нет регрессов" text="Создайте первый прогон, чтобы начать фиксировать результаты по платформам." action="Создать регресс" onAction={() => setPage('regressions')} />}</div><div className="panel progress-panel"><div className="panel-heading"><div><h2>Каталог проверок</h2><p>Текущий объём тестовой базы</p></div><span className="muted">{cases.length}</span></div><div className="empty-chart"><div className="chart-ring"><span>{cases.length || '—'}</span></div><span>{cases.length ? 'Тестов доступно для новых прогонов' : 'Создайте каталог и добавьте тесты'}</span></div></div></div><div className="panel quick-panel"><div className="panel-heading"><div><h2>Быстрый старт</h2><p>Начните работу с текущим чек-листом</p></div></div><div className="quick-actions"><button onClick={() => setPage('cases')}><span className="quick-icon blue">☷</span><span><b>Открыть каталог</b><small>Просматривать и редактировать проверки</small></span><span className="arrow">→</span></button><button onClick={() => setPage('regressions')}><span className="quick-icon green">＋</span><span><b>Создать регресс</b><small>Запустить новый прогон</small></span><span className="arrow">→</span></button></div></div></> : page === 'cases' ? <CaseCatalog cases={cases} setCases={setCases} search={search} setSearch={setSearch} assets={assets} setAssets={setAssets} catalogs={catalogs} setCatalogs={setCatalogs} /> : page === 'transfer' ? <ImportExportPage cases={cases} setCases={setCases} regressions={regressions} assets={assets} setAssets={setAssets} catalogs={catalogs} setCatalogs={setCatalogs} /> : (page === 'regressions' || page === 'history') ? <RegressionManager cases={cases} catalogs={catalogs} regressions={regressions} setRegressions={setRegressions} historyOnly={page === 'history'} /> : <div className="panel placeholder-panel"><EmptyState icon="◷" title="Создайте первый регресс" text="Новый регресс сохранит снимок тестов, чтобы история не менялась при редактировании каталога." action="Новый регресс" onAction={() => setPage('regressions')} /></div>}
+          {page === 'dashboard' ? <Dashboard cases={cases} regressions={regressions} run={dashboardRun} counts={dashboardCounts} progress={dashboardProgress} totalSlots={dashboardSlots} dataReady={dataReady} onNavigate={setPage} /> : page === 'cases' ? <CaseCatalog cases={cases} setCases={setCases} search={search} setSearch={setSearch} assets={assets} setAssets={setAssets} catalogs={catalogs} setCatalogs={setCatalogs} /> : page === 'transfer' ? <ImportExportPage cases={cases} setCases={setCases} regressions={regressions} assets={assets} setAssets={setAssets} catalogs={catalogs} setCatalogs={setCatalogs} /> : (page === 'regressions' || page === 'history') ? <RegressionManager cases={cases} catalogs={catalogs} regressions={regressions} setRegressions={setRegressions} historyOnly={page === 'history'} /> : <div className="panel placeholder-panel"><EmptyState icon="◷" title="Создайте первый регресс" text="Новый регресс сохранит снимок тестов, чтобы история не менялась при редактировании каталога." action="Новый регресс" onAction={() => setPage('regressions')} /></div>}
           </>}
           <footer className="footer">Локальная система управления тестированием</footer>
         </section>
@@ -84,7 +99,50 @@ export default function App() {
   );
 }
 
-function Stat({ label, value, note, icon }) { return <div className="stat-card"><div className="stat-top"><span>{label}</span><span className="stat-icon">{icon}</span></div><strong>{value}</strong><small>{note}</small></div>; }
+function NavIcon({ name }) {
+  const paths = {
+    dashboard: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,
+    catalog: <><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="2" cy="6" r=".5"/><circle cx="2" cy="12" r=".5"/><circle cx="2" cy="18" r=".5"/></>,
+    regression: <><path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 12v5l3 2"/><path d="M7 4 5 6M17 4l2 2"/></>,
+    history: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2M3 12h3"/></>,
+    transfer: <><path d="M7 3v14m0 0-4-4m4 4 4-4M17 21V7m0 0 4 4m-4-4-4 4"/></>,
+    settings: <><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.8-.6a8 8 0 0 1-1.5.9l-.3 1.9h-2.8l-.3-1.9a8 8 0 0 1-1.5-.9l-1.8.6-1.4-2.4 1.4-1.1a8 8 0 0 1 0-1.8l-1.4-1.1 1.4-2.4 1.8.6a8 8 0 0 1 1.5-.9l.3-1.9h2.8l.3 1.9a8 8 0 0 1 1.5.9l1.8-.6 1.4 2.4-1.4 1.1a8 8 0 0 1 0 1.8Z"/></>,
+  };
+  return <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
+}
+
+function Stat({ label, value, note, icon, tone = 'cyan' }) { return <div className={`stat-card stat-${tone}`}><div className="stat-top"><span>{label}</span><span className="stat-icon">{icon}</span></div><strong>{value}</strong><small>{note}</small></div>; }
+
+function Dashboard({ cases, regressions, run, counts, progress, totalSlots, dataReady, onNavigate }) {
+  const activeRuns = regressions.filter(item => item.status === 'active').length;
+  const statusSummary = [
+    { key: 'Успешно', tone: 'success', icon: '✓' },
+    { key: 'Не успешно', tone: 'failure', icon: '!' },
+    { key: 'В процессе', tone: 'progress', icon: '◷' },
+  ];
+  return <div className="dashboard-page">
+    <section className="dashboard-hero">
+      <div className="dashboard-hero-copy"><span className="hero-kicker"><i /> BUG HUNTERS <b>·</b> QA CONTROL</span><h2>Охотники за багами</h2><p>Единый центр проверок: каталоги, регрессы и результаты команды.</p><button className="button button-primary" onClick={() => onNavigate('cases')}>Открыть каталог <span aria-hidden="true">↗</span></button></div>
+      <div className="hero-orbit" aria-hidden="true"><div className="orbit-ring orbit-ring-outer"/><div className="orbit-ring orbit-ring-inner"/><span className="orbit-core">Q</span><span className="orbit-tag orbit-tag-top">QA / SYSTEM</span><span className="orbit-tag orbit-tag-bottom">BUGS: TRACKED</span><i className="orbit-dot"/></div>
+      <div className="hero-scanline" aria-hidden="true"/>
+    </section>
+    <section className="dashboard-stats" aria-label="Сводка проекта">
+      <Stat label="Тест-кейсы" value={dataReady ? cases.length.toLocaleString('ru-RU') : '…'} note="В каталогах" icon="▤" tone="cyan" />
+      <Stat label="Активные регрессы" value={activeRuns} note="Сейчас выполняются" icon="◷" tone="purple" />
+      <Stat label="Успешные проверки" value={run ? (counts['Успешно'] || 0).toLocaleString('ru-RU') : '—'} note={run ? `В регрессе «${run.name}»` : 'Нет выбранного прогона'} icon="✓" tone="success" />
+      <Stat label="Неуспешные проверки" value={run ? (counts['Не успешно'] || 0).toLocaleString('ru-RU') : '—'} note={run ? 'В последнем регрессе' : 'Нет выбранного прогона'} icon="!" tone="failure" />
+      <div className="stat-card stat-progress"><div className="stat-top"><span>Выполнение регресса</span><span className="stat-icon">◴</span></div><strong>{run ? `${progress}%` : '—'}</strong><small>{run ? `${totalSlots.toLocaleString('ru-RU')} проверок · ${run.platforms?.join(' · ') || 'без платформ'}` : 'Запустите регресс'}</small><div className="stat-progress-track"><span style={{ width: `${progress}%` }}/></div></div>
+    </section>
+    <section className="dashboard-lower">
+      <div className="dashboard-panel dashboard-runs"><div className="dashboard-panel-heading"><div><span className="section-kicker">ACTIVITY FEED</span><h2>Последние регрессы</h2></div><button className="text-button" onClick={() => onNavigate('history')}>Вся история <span aria-hidden="true">→</span></button></div>
+        {regressions.length ? <div className="dashboard-run-list">{regressions.slice(0, 4).map(item => <button className="dashboard-run" key={item.id} onClick={() => onNavigate(item.status === 'active' ? 'regressions' : 'history')}><span className="run-status-light" data-status={item.status}/><span className="dashboard-run-main"><b>{item.name}</b><small>{item.catalogTitle || item.catalogType} · {new Date(item.createdAt).toLocaleDateString('ru-RU')}</small></span><span className={`run-state ${item.status === 'active' ? 'is-active' : ''}`}>{item.status === 'active' ? 'В процессе' : 'Завершён'}</span><span className="run-arrow" aria-hidden="true">↗</span></button>)}</div> : <div className="dashboard-empty"><span className="empty-mark">◷</span><b>Регрессов пока нет</b><span>Создайте первый прогон, чтобы отслеживать результаты.</span><button className="button button-secondary" onClick={() => onNavigate('regressions')}>Перейти к регрессам</button></div>}
+      </div>
+      <div className="dashboard-panel dashboard-focus"><div className="dashboard-panel-heading"><div><span className="section-kicker">RUN SNAPSHOT</span><h2>{run ? run.name : 'Сводка проверок'}</h2></div><span className={`focus-indicator ${run?.status === 'active' ? 'is-live' : ''}`}>{run ? (run.status === 'active' ? 'LIVE' : 'DONE') : 'IDLE'}</span></div>
+        {run ? <><div className="focus-progress-label"><span>Прогресс</span><b>{progress}%</b></div><div className="focus-progress"><span style={{ width: `${progress}%` }}/></div><div className="focus-status-list">{statusSummary.map(status => <div className={`focus-status focus-status-${status.tone}`} key={status.key}><span>{status.icon}</span><b>{(counts[status.key] || 0).toLocaleString('ru-RU')}</b><small>{status.key}</small></div>)}</div><p className="focus-caption">Сводка по {run.status === 'active' ? 'активному' : 'последнему завершённому'} регрессу · {run.platforms?.join(' · ')}</p></> : <div className="focus-no-run"><div className="focus-grid-mark">＋</div><p>Запустите регресс, чтобы видеть динамику выполнения и статусы проверок.</p><button className="button button-primary" onClick={() => onNavigate('regressions')}>Новый регресс</button></div>}
+      </div>
+    </section>
+  </div>;
+}
 
 function EmptyState({ icon, title, text, action, onAction }) { return <div className="empty-state"><span className="empty-icon">{icon}</span><h3>{title}</h3><p>{text}</p>{action && <button className="button button-secondary" onClick={onAction}>{action}</button>}</div>; }
 

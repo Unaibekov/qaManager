@@ -1,0 +1,92 @@
+.modal-backdrop {
+  z-index: 100;
+  background: rgb(4 9 18 / 76%);
+  backdrop-filter: blur(7px);
+}
+
+.edit-modal {
+  border: 1px solid #2d4568;
+  border-radius: var(--radius-lg);
+  background: #111b31;
+  color: var(--text-primary);
+  box-shadow: 0 26px 90px rgb(0 0 0 / 54%), 0 0 26px rgb(38 218 239 / 5%);
+  scrollbar-color: #405879 #101a2d;
+}
+
+.modal-heading { align-items: center; gap: 16px; }
+.modal-heading h2 { color: var(--text-primary); font-family: var(--font-display); font-size: 21px; }
+.modal-heading p { color: var(--text-secondary); }
+.modal-heading .icon-button { flex: 0 0 32px; width: 32px; height: 32px; border-color: var(--border-default); background: #17233d; color: #9db1ce; }
+.modal-heading .icon-button:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+.field-label { color: #b7c8df; font-size: 12px; }
+.field-label > input, .field-label > select, .field-label > textarea {
+  min-height: 38px;
+  border-color: var(--border-default);
+  border-radius: 7px;
+  background: #0d1729;
+  color: var(--text-primary);
+}
+
+.field-label > input::placeholder, .field-label > textarea::placeholder { color: #7187a8; }
+.field-label > input:focus, .field-label > select:focus, .field-label > textarea:focus { border-color: var(--accent-cyan); box-shadow: var(--focus-ring); }
+.field-label > select option { background: #111b31; color: var(--text-primary); }
+.platform-checks { gap: 10px 18px; flex-wrap: wrap; }
+.platform-checks label { color: #c3d2e7; }
+.platform-checks input { accent-color: var(--accent-cyan); }
+.modal-actions { align-items: center; }
+.modal-actions .button-secondary { border-color: var(--border-default); background: #17233d; color: #c3d2e7; }
+.modal-actions .button-secondary:hover { border-color: #49688e; color: var(--text-primary); }
+.modal-actions .button-primary { border-color: var(--accent-cyan); background: var(--accent-cyan); color: #071323; box-shadow: 0 0 16px rgb(38 218 239 / 13%); }
+.modal-actions .button-primary:hover { background: #64e9f4; }
+.button-danger { border-color: rgb(255 100 140 / 35%); background: rgb(255 100 140 / 8%); color: #ff9ab3; }
+.button-danger:hover:not(:disabled) { border-color: var(--status-failed); background: rgb(255 100 140 / 15%); color: #ffb0c3; }
+.button-danger:disabled { opacity: .45; cursor: not-allowed; }
+.form-error { border: 1px solid rgb(255 100 140 / 24%); background: rgb(255 100 140 / 8%); color: #ff9ab3; }
+.import-success { border: 1px solid rgb(52 213 165 / 25%); background: rgb(52 213 165 / 8%); color: #80e9c8; }
+.notice { border-color: rgb(246 199 109 / 25%); background: rgb(246 199 109 / 7%); color: #f3d98b; }
+.notice button { cursor: pointer; }
+
+.run-edit-modal { width: min(620px, calc(100vw - 36px)); }
+.run-edit-actions { display: flex; }
+.run-attachment-modal {
+  width: min(850px, calc(100vw - 36px));
+  max-height: min(88vh, 900px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.run-attachment-modal > .modal-heading { flex: 0 0 auto; }
+.run-attachment-tabs { border-bottom-color: var(--border-default); }
+.run-attachment-tabs button { color: #95abc9; }
+.run-attachment-tabs button.active { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+.run-attachment-tabs button span { border-color: var(--border-default); background: #17233d; color: #a9bdd8; }
+.run-attachment-panel { min-height: 0; overflow: auto; }
+.run-photo-card, .run-log-list li { border-color: var(--border-default); background: #14213a; }
+.run-photo-open { color: #c7d7eb; }
+.run-photo-open:hover { color: var(--accent-cyan); }
+.run-attachment-empty { color: #8399b8; }
+.run-log-file-icon { border-color: rgb(166 107 255 / 26%); background: rgb(166 107 255 / 9%); color: #c09aff; }
+.run-log-open { color: #c7d7eb; }
+.run-log-open small { color: #8298b8; }
+.run-log-preview pre, .run-log-editor textarea { border-color: var(--border-default); background: #0a1322; color: #c7d7eb; }
+.run-photo-preview > img { border-color: var(--border-default); background: #0a1322; }
+.run-attachment-remove { border-color: var(--border-default); background: #17233d; color: #a0b4d0; cursor: pointer; }
+.run-attachment-remove:hover:not(:disabled) { border-color: var(--status-failed); color: var(--status-failed); }
+
+.comment-view-modal { width: min(680px, calc(100vw - 36px)); }
+.comment-view-text { color: #c4d4e9; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+@media (max-width: 600px) {
+  .modal-backdrop { padding: 10px; }
+  .edit-modal { max-width: calc(100vw - 20px); padding: 18px 14px; }
+  .run-attachment-modal { max-height: 94vh; }
+  .run-attachment-modal > .modal-actions { flex: 0 0 auto; }
+  .modal-actions { flex-wrap: wrap; }
+  .modal-actions-spacer { display: none; }
+  .run-edit-actions { justify-content: flex-end; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop { backdrop-filter: none; }
+}

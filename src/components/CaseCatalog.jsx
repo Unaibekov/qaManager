@@ -231,7 +231,7 @@ export default function CaseCatalog({ cases, setCases, search, setSearch, assets
       <div className="edit-modal comment-view-modal" role="dialog" aria-modal="true" aria-labelledby="case-comment-title"><div className="modal-heading"><div><h2 id="case-comment-title">Комментарий</h2><p>{viewingComment.title}</p></div><button type="button" className="icon-button" aria-label="Закрыть" onClick={() => setViewingComment(null)}>×</button></div><p className="comment-view-text">{viewingComment.note}</p><div className="modal-actions"><button type="button" className="button button-secondary" onClick={() => setViewingComment(null)}>Закрыть</button></div></div>
     </div>}
     {catalogModal && <div className="modal-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) { setCatalogModal(false); setEditingCatalog(null); setCatalogError(''); } }}>
-      <form className="edit-modal" onSubmit={saveCatalog}>
+      <form className="edit-modal catalog-editor-modal" onSubmit={saveCatalog}>
         <div className="modal-heading"><div><h2>{editingCatalog ? 'Настроить каталог' : 'Создать каталог'}</h2></div><button type="button" className="icon-button" aria-label="Закрыть" onClick={() => { setCatalogModal(false); setEditingCatalog(null); setCatalogError(''); }}>×</button></div>
         <label className="field-label">Название каталога<input autoFocus value={catalogName} onChange={event => setCatalogName(event.target.value)} /></label>
         {catalogError && <div className="form-error">{catalogError}</div>}
