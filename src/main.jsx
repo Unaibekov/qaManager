@@ -10,6 +10,7 @@ import './styles/modals.css';
 import './styles/transfer.css';
 import './styles/responsive.css';
 import './styles/animations.css';
+import './styles/login.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode><App /></React.StrictMode>,

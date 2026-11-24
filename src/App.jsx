@@ -21,6 +21,7 @@ const titles = {
 };
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem('qa-manager-session') === 'active');
   const [page, setPage] = useState('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [search, setSearch] = useState('');
@@ -70,6 +71,10 @@ export default function App() {
     return () => { cancelled = true; };
   }, []);
 
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={() => { sessionStorage.setItem('qa-manager-session', 'active'); setIsAuthenticated(true); }} />;
+  }
+
   return (
     <div className={`app-shell ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       <aside className="sidebar">
@@ -97,6 +102,16 @@ export default function App() {
       {showScrollTop && <button type="button" className="scroll-top-button" aria-label="Наверх" title="Наверх" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>}
     </div>
   );
+}
+
+function LoginPage({ onLogin }) {
+  return <main className="login-screen">
+    <div className="login-shade" aria-hidden="true" />
+    <section className="login-content" aria-label="Вход в QA Manager">
+      <img className="login-logo" src="/images/bug-hunters-logo.png" alt="Охотники за багами — Bug Hunters" />
+      <button type="button" className="login-button" onClick={onLogin}>Войти <span aria-hidden="true">↗</span></button>
+    </section>
+  </main>;
 }
 
 function NavIcon({ name }) {
