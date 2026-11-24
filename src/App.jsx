@@ -87,6 +87,7 @@ export default function App() {
           <button aria-label="Настройки" title={sidebarCollapsed ? 'Настройки' : undefined} className={`nav-item ${showSettings ? 'active' : ''}`} onClick={() => setShowSettings(true)}><NavIcon name="settings" />Настройки</button>
           <div className="version"><span>v1.0</span></div>
           <button type="button" className="nav-item sidebar-collapse-button" aria-label={sidebarCollapsed ? 'Развернуть меню' : 'Свернуть меню'} title={sidebarCollapsed ? 'Развернуть меню' : 'Свернуть меню'} onClick={() => setSidebarCollapsed(value => !value)}><span className="nav-icon">{sidebarCollapsed ? '»' : '«'}</span>{sidebarCollapsed ? 'Развернуть меню' : 'Свернуть меню'}</button>
+          <button type="button" className="nav-item sidebar-logout-button" aria-label="Выйти на экран авторизации" title={sidebarCollapsed ? 'Выйти' : undefined} onClick={() => { sessionStorage.removeItem('qa-manager-session'); setIsAuthenticated(false); }}><span className="nav-icon" aria-hidden="true">↪</span>Выйти</button>
         </div>
       </aside>
       <main className="main-area">
