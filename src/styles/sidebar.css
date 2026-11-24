@@ -4,6 +4,17 @@
   color: var(--text-primary);
 }
 
+.content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.main-area,
+.app-shell.sidebar-collapsed .main-area {
+  margin-left: 0;
+}
+
 .sidebar {
   position: sticky;
   top: 0;

@@ -1,5 +1,6 @@
 .content:has(.dashboard-page) {
-  max-width: 1700px;
+  max-width: none;
+  margin: 0;
   padding-top: 28px;
 }
 
