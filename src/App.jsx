@@ -109,7 +109,7 @@ function LoginPage({ onLogin }) {
     <div className="login-shade" aria-hidden="true" />
     <section className="login-content" aria-label="Вход в QA Manager">
       <img className="login-logo" src="/images/bug-hunters-logo.png" alt="Охотники за багами — Bug Hunters" />
-      <button type="button" className="login-button" onClick={onLogin}>Войти <span aria-hidden="true">↗</span></button>
+      <button type="button" className="login-button" onClick={onLogin}>Войти</button>
     </section>
   </main>;
 }
